@@ -48,6 +48,10 @@
 }
 *{box-sizing:border-box}
 html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.55;font-size:17px}
 a{color:var(--blue-deep)}
 .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
@@ -81,7 +85,7 @@ section.block{padding-block:clamp(44px,6vw,80px)}
 .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;
   border-bottom:1px solid var(--ink);padding-bottom:14px;margin-bottom:8px}
 .sec-head h2{margin:0;font-size:clamp(22px,3vw,32px);font-weight:700;letter-spacing:-.02em}
-.sec-head .count{font-family:var(--mono);font-size:12px;color:var(--stone-soft);letter-spacing:.06em}
+.sec-head .count{font-family:var(--mono);font-size:12px;color:var(--stone);letter-spacing:.06em}
 
 /* subpage header + prose */
 .page-head{padding:clamp(44px,7vw,88px) 0 clamp(20px,3vw,36px)}
@@ -113,7 +117,7 @@ footer{border-top:1px solid var(--hair);padding:32px 0 64px;margin-top:20px}
 .f-contact a:hover{color:var(--blue)}
 .f-contact .sep{color:var(--hair)}
 footer .row{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;
-  font-family:var(--mono);font-size:12.5px;color:var(--stone-soft)}
+  font-family:var(--mono);font-size:12.5px;color:var(--stone)}
 footer .row a{color:var(--stone)}
 footer .row a:hover{color:var(--ink)}
 footer .tag{font-style:normal;color:var(--blue-deep)}

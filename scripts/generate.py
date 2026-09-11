@@ -77,7 +77,11 @@ def set_leds(text):
         up = is_up(url)
         cls = "led-up" if up else "led-down"
         title = "online" if up else "offline"
-        led = '<span class="led %s" title="%s">&#9679;</span>' % (cls, title)
+        led = '<span class="led %s" title="%s" role="img" aria-label="%s">&#9679;</span>' % (
+            cls,
+            title,
+            title,
+        )
         pat = re.compile(r"(<!--LED:%s-->).*?(<!--/LED-->)" % re.escape(repo), re.S)
         text = pat.sub(lambda m: m.group(1) + led + m.group(2), text)
     return text

@@ -51,7 +51,7 @@ deploy self-verification, no email address published.
 |---|------|------|--------|
 | 01 | SEO & sharing foundations: sitemap, robots, canonicals, JSON-LD | [plans/01-seo-foundations.md](plans/01-seo-foundations.md) | ✅ 2026-09-11 · PR #6 |
 | 02 | Self-host fonts (drop Google Fonts dependency) | [plans/02-self-hosted-fonts.md](plans/02-self-hosted-fonts.md) | ✅ 2026-09-11 · PR #6 |
-| 04 | Accessibility pass to WCAG 2.2 AA | [plans/04-accessibility-pass.md](plans/04-accessibility-pass.md) | ☐ ready |
+| 04 | Accessibility pass to WCAG 2.2 AA | [plans/04-accessibility-pass.md](plans/04-accessibility-pass.md) | ✅ 2026-09-11 · PR #6 |
 | 06 | Deploy self-verification workflow (Pages queue-timeout guard) | [plans/06-deploy-verification.md](plans/06-deploy-verification.md) | ☐ ready |
 
 **P2 — depth & durability (fully executable now)**
