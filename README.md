@@ -15,6 +15,9 @@ Fonts are Archivo / Newsreader / JetBrains Mono from Google Fonts.
 - `index.html` — homepage: hero, live activity ticker, the project list
   ("Work") with status dots, and a guestbook rendered from GitHub issues.
 - `about/index.html` — bio, ways of working, quick facts.
+- `work/<slug>/index.html` — a case-study page per project (real screenshot or
+  a typographic fallback cover, facts row, short prose). Linked from each
+  project's `.name` on the homepage; cycle through them with "Next project →".
 - `writing/index.html` — post index; each post is a directory
   (e.g. `writing/hello-world/`). To add a post, copy an existing one,
   edit it, and add a `<li>` to the index (newest first).
@@ -96,7 +99,14 @@ Two edits, then commit to `main`:
    ```
 
    Keep the LED markers exactly as shown so the daily Action can light the
-   dot, and update the `NN projects` count in the section head.
+   dot, and update the `NN projects` count in the section head. The `.name`
+   link should point at the project's case-study page (`work/REPO/`, see next
+   step); add a `.src`-styled `[ live ]` link next to `[ source ]` for the
+   actual live URL.
+3. **`work/REPO/`** — create the case-study page: copy an existing one (e.g.
+   `work/life-improver/`), swap the slug, facts, prose, and `cover.png`, and
+   fix the "Next project →" links on this page and its neighbors so the cycle
+   stays intact. Add the page to `sitemap.xml`.
 
 Note: `aboutali.github.io/<repo>/` only resolves if that repo has GitHub
 Pages enabled (Settings → Pages); until then the dot will show "down".

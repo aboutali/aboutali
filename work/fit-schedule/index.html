@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>fit-schedule — Angelo Boutalikakis</title>
+  <meta name="description" content="A web app that aggregates bookable fitness classes from three Zurich studios into one live schedule.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/brand/assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/brand/assets/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/brand/assets/apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aboutali.github.io/work/fit-schedule/">
+  <meta property="og:title" content="fit-schedule — Angelo Boutalikakis">
+  <meta property="og:description" content="A web app that aggregates bookable fitness classes from three Zurich studios into one live schedule.">
+  <meta property="og:image" content="https://aboutali.github.io/brand/assets/og-image.png">
+  <link rel="canonical" href="https://aboutali.github.io/work/fit-schedule/">
+  <link rel="preload" href="/assets/fonts/archivo-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <style>
+    .facts{display:grid;gap:14px 40px;grid-template-columns:repeat(2,1fr);margin:26px 0 0;
+      padding:22px 0;border-block:1px solid var(--hair);max-width:760px}
+    @media(max-width:640px){.facts{grid-template-columns:1fr}}
+    .facts dt{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue-deep)}
+    .facts dd{margin:6px 0 0;font-size:15.5px;color:#2c2a24}
+    .facts .sep{color:var(--hair);margin:0 6px}
+    .status-up{color:var(--up)} .status-down{color:var(--down)}
+    .cover{display:block;width:100%;height:auto;margin:8px 0 0;border:1px solid var(--hair);border-radius:10px}
+    .back{font-family:var(--mono);font-size:13px;text-decoration:none}
+    .back + .back{margin-left:18px}
+  </style>
+</head>
+<body>
+
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="wrap row">
+      <a class="wm" href="../../" aria-label="Angelo Boutalikakis — home">
+        <span class="wm-full">Angelo<span class="sur"> Boutalikakis</span><span class="dot">.</span></span>
+        <span class="wm-mini">A<span class="sur">B</span><span class="dot">.</span></span>
+      </a>
+      <nav class="topnav" aria-label="Site">
+        <a href="../../#work" aria-current="page">Work</a>
+        <a href="../../about/">About</a>
+        <a href="../../writing/">Writing</a>
+        <a href="../../cv/">CV</a>
+        <a href="https://github.com/aboutali">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap" tabindex="-1">
+
+    <div class="page-head">
+      <div class="kicker">Work · 03</div>
+      <h1>fit-schedule</h1>
+      <p class="lede">A web app that aggregates bookable fitness classes from three Zurich studios
+        into one live schedule.</p>
+    </div>
+
+    <img class="cover" src="cover.png" width="1200" height="750" loading="lazy"
+      alt="Typographic cover card for fit-schedule: project name, offline status, and its Product / Web App / Cities tags on a paper background with a cobalt rule.">
+
+    <dl class="facts">
+      <div><dt>Role</dt><dd>Concept, design &amp; build</dd></div>
+      <div><dt>Stack</dt><dd>Node.js · Express · Playwright (+ stealth plugin) for studio scraping</dd></div>
+      <div><dt>Status</dt><dd><span class="status-down">●</span> Offline</dd></div>
+      <div><dt>Links</dt><dd><a href="https://aboutali.github.io/fit-schedule/">Live site</a><span class="sep">·</span><a href="https://github.com/aboutali/fit-schedule">Source</a></dd></div>
+    </dl>
+
+    <div class="prose block" style="padding-top:0">
+      <h2>What it is</h2>
+      <p>An aggregated fitness-class schedule pulling from three Zurich studios — Balboa Move,
+        BOOSTD, and Barry's Switzerland — so a class booked across three separate systems shows up
+        in one place instead of three tabs.</p>
+
+      <h2>How it works</h2>
+      <p>An Express server serves the merged schedule; a separate fetch script pulls each studio
+        on demand via a <code>--studio</code> flag (<code>balboa</code>, <code>boostd</code>, or
+        <code>barrys</code>), or all three at once. Studio booking pages tend to be JS-rendered
+        and defensive about automated traffic, which is why the fetcher runs on Playwright with a
+        stealth plugin rather than a plain HTTP client.</p>
+
+      <h2>Status</h2>
+      <p>Offline at last check — the live site currently returns a 404. The cover above is a
+        typographic card rather than a live screenshot, generated from the project's own brand
+        tokens since there was nothing running to capture.</p>
+    </div>
+
+    <p class="block" style="padding-top:0">
+      <a class="back" href="../../#work">← All projects</a>
+      <a class="back" href="../cloudy-plag/">Next project →</a>
+    </p>
+
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <!-- TODO: add email when ready -->
+      <div class="f-contact">
+        <span class="f-k">Contact</span>
+        <a href="https://www.linkedin.com/in/angelo-boutalikakis/">LinkedIn</a><span class="sep">·</span>
+        <a href="https://github.com/aboutali">GitHub</a>
+      </div>
+      <div class="row">
+        <span><a href="../../">← Home</a></span>
+        <span class="tag">Curiosity meets rigor.</span>
+        <span><a href="https://github.com/aboutali/aboutali.github.io">Source</a> · no frameworks, no build</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
