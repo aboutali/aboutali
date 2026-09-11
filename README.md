@@ -74,6 +74,14 @@ failing. **A red run means the live site may be stale or broken** — check
 the Actions log; if it couldn't self-heal (403/404 on the rebuild request),
 re-run the deploy manually from the Actions tab.
 
+### Checks
+
+`.github/workflows/checks.yml` runs `scripts/check.py` (stdlib only) on
+every pull request and on push to `main`: it gates Action-marker integrity,
+internal links, basic HTML sanity (one `<h1>`, a `<title>`, `lang`, `alt`,
+no duplicate ids), and sitemap/feed XML validity. Run it locally before
+pushing with `python3 scripts/check.py`.
+
 ## Adding a new project
 
 Two edits, then commit to `main`:
