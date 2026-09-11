@@ -1,0 +1,8 @@
+<!-- When adding a page or post, add its <url> here (see backlog plan 01) -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://aboutali.github.io/</loc></url>
+  <url><loc>https://aboutali.github.io/about/</loc></url>
+  <url><loc>https://aboutali.github.io/writing/</loc></url>
+  <url><loc>https://aboutali.github.io/writing/hello-world/</loc></url>
+  <url><loc>https://aboutali.github.io/cv/</loc></url>
+</urlset>
