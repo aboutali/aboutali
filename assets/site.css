@@ -2,6 +2,40 @@
    Tokens + chrome (topbar, footer, sections) used by every page.
    Page-specific rules live inline in each page's <head>. */
 
+/* self-hosted fonts (latin subset, OFL) — see assets/fonts/LICENSE-NOTE.md */
+@font-face{
+  font-family:"Archivo";
+  font-style:normal;
+  font-weight:100 900;
+  font-display:swap;
+  src:url("fonts/archivo-latin-var.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:"Newsreader";
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
+  src:url("fonts/newsreader-regular-latin-var.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:"Newsreader";
+  font-style:italic;
+  font-weight:200 800;
+  font-display:swap;
+  src:url("fonts/newsreader-italic-latin-var.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:"JetBrains Mono";
+  font-style:normal;
+  font-weight:400 800;
+  font-display:swap;
+  src:url("fonts/jetbrains-mono-latin-var.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
 :root{
   --ink:#17171A; --paper:#FAF8F4; --stone:#6E6A60; --stone-soft:#9B9890; --hair:#E6E2DA;
   --blue:#2C46C8; --blue-deep:#1B2E8F;
@@ -14,6 +48,10 @@
 }
 *{box-sizing:border-box}
 html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.55;font-size:17px}
 a{color:var(--blue-deep)}
 .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
@@ -47,7 +85,7 @@ section.block{padding-block:clamp(44px,6vw,80px)}
 .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;
   border-bottom:1px solid var(--ink);padding-bottom:14px;margin-bottom:8px}
 .sec-head h2{margin:0;font-size:clamp(22px,3vw,32px);font-weight:700;letter-spacing:-.02em}
-.sec-head .count{font-family:var(--mono);font-size:12px;color:var(--stone-soft);letter-spacing:.06em}
+.sec-head .count{font-family:var(--mono);font-size:12px;color:var(--stone);letter-spacing:.06em}
 
 /* subpage header + prose */
 .page-head{padding:clamp(44px,7vw,88px) 0 clamp(20px,3vw,36px)}
@@ -79,7 +117,7 @@ footer{border-top:1px solid var(--hair);padding:32px 0 64px;margin-top:20px}
 .f-contact a:hover{color:var(--blue)}
 .f-contact .sep{color:var(--hair)}
 footer .row{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;
-  font-family:var(--mono);font-size:12.5px;color:var(--stone-soft)}
+  font-family:var(--mono);font-size:12.5px;color:var(--stone)}
 footer .row a{color:var(--stone)}
 footer .row a:hover{color:var(--ink)}
 footer .tag{font-style:normal;color:var(--blue-deep)}

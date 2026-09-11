@@ -15,9 +15,13 @@ Fonts are Archivo / Newsreader / JetBrains Mono from Google Fonts.
 - `index.html` — homepage: hero, live activity ticker, the project list
   ("Work") with status dots, and a guestbook rendered from GitHub issues.
 - `about/index.html` — bio, ways of working, quick facts.
+- `work/<slug>/index.html` — a case-study page per project (real screenshot or
+  a typographic fallback cover, facts row, short prose). Linked from each
+  project's `.name` on the homepage; cycle through them with "Next project →".
 - `writing/index.html` — post index; each post is a directory
-  (e.g. `writing/hello-world/`). To add a post, copy an existing one,
-  edit it, and add a `<li>` to the index (newest first).
+  (e.g. `writing/hello-world/`). To add a post, copy an existing one, edit
+  it, add a `<li>` to the index (newest first), add an `<entry>` to
+  `writing/feed.xml`, and add the post URL to `sitemap.xml`.
 - `cv/index.html` — CV with a print stylesheet (prints to a clean A4 resume).
 - `404.html` — custom not-found page (uses absolute asset paths since Pages
   serves it from arbitrary URLs).
@@ -57,6 +61,27 @@ first, it re-syncs and retries with backoff. Commits are authored by
 > skipped; to include them, add a PAT secret with `repo` scope and read it
 > in the workflow.
 
+### Deploy verification
+
+`.github/workflows/verify-deploy.yml` guards against a stalled or partial
+Pages deploy (this happened once: a queued build timed out and the site
+served stale content for 10 minutes with no signal). It runs on every push
+to `main`, daily, and on demand: it polls the Pages Builds API until the
+latest build matches the pushed commit and is `built`, then checks that
+`/`, `/about/`, `/writing/`, and `/cv/` all return 200. If that doesn't
+happen in time, it requests a fresh Pages build and re-polls once before
+failing. **A red run means the live site may be stale or broken** — check
+the Actions log; if it couldn't self-heal (403/404 on the rebuild request),
+re-run the deploy manually from the Actions tab.
+
+### Checks
+
+`.github/workflows/checks.yml` runs `scripts/check.py` (stdlib only) on
+every pull request and on push to `main`: it gates Action-marker integrity,
+internal links, basic HTML sanity (one `<h1>`, a `<title>`, `lang`, `alt`,
+no duplicate ids), and sitemap/feed XML validity. Run it locally before
+pushing with `python3 scripts/check.py`.
+
 ## Adding a new project
 
 Two edits, then commit to `main`:
@@ -83,7 +108,14 @@ Two edits, then commit to `main`:
    ```
 
    Keep the LED markers exactly as shown so the daily Action can light the
-   dot, and update the `NN projects` count in the section head.
+   dot, and update the `NN projects` count in the section head. The `.name`
+   link should point at the project's case-study page (`work/REPO/`, see next
+   step); add a `.src`-styled `[ live ]` link next to `[ source ]` for the
+   actual live URL.
+3. **`work/REPO/`** — create the case-study page: copy an existing one (e.g.
+   `work/life-improver/`), swap the slug, facts, prose, and `cover.png`, and
+   fix the "Next project →" links on this page and its neighbors so the cycle
+   stays intact. Add the page to `sitemap.xml`.
 
 Note: `aboutali.github.io/<repo>/` only resolves if that repo has GitHub
 Pages enabled (Settings → Pages); until then the dot will show "down".

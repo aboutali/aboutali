@@ -1,0 +1,147 @@
+name: Verify deploy
+
+# Confirms a GitHub Pages deploy actually landed instead of silently stalling
+# (on 2026-07-02 a push to main produced a deploy that sat in
+# `deployment_queued` for 10 minutes and timed out, leaving the site stale
+# until a manual re-run). Runs after every push to main, once a day as a
+# belt-and-braces check, and on demand.
+#
+# `workflow_run` can't target the Pages build ("pages build and deployment"
+# is a GitHub-managed dynamic workflow, not a targetable one), so this polls
+# the REST Pages Builds API instead and cross-checks the four key pages.
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '43 7 * * *'   # daily, ~30 min after the refresh workflow
+  workflow_dispatch:        # run on demand from the Actions tab
+
+permissions:
+  contents: read
+  pages: write   # needed only for the self-heal POST /pages/builds call
+
+concurrency:
+  group: verify-deploy
+  cancel-in-progress: false
+
+env:
+  OWNER: aboutali
+  REPO: aboutali.github.io
+  SITE: https://aboutali.github.io
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Poll for a matching, built Pages deploy and check key pages
+        id: check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -u
+          target_sha="${GITHUB_SHA}"
+          echo "Target commit: $target_sha"
+
+          # Give Pages a head start after a push before polling; schedule/
+          # dispatch runs are checking a deploy that (should) already be old.
+          if [ "${GITHUB_EVENT_NAME}" = "push" ]; then
+            echo "Push event: waiting 90s for the Pages build to start."
+            sleep 90
+          fi
+
+          poll_builds() {
+            # Polls up to 16 * 30s (~8 min) for the latest Pages build to
+            # match $target_sha and report status "built".
+            for i in $(seq 1 16); do
+              resp="$(curl -fsS \
+                -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+                -H "Accept: application/vnd.github+json" \
+                "https://api.github.com/repos/${OWNER}/${REPO}/pages/builds/latest" || true)"
+              if [ -n "$resp" ]; then
+                commit="$(echo "$resp" | jq -r '.commit // empty')"
+                status="$(echo "$resp" | jq -r '.status // empty')"
+                echo "attempt $i/16: commit=$commit status=$status"
+                if [ "$commit" = "$target_sha" ] && [ "$status" = "built" ]; then
+                  echo "Pages build matches target commit and is built."
+                  return 0
+                fi
+              else
+                echo "attempt $i/16: pages/builds/latest request failed"
+              fi
+              sleep 30
+            done
+            return 1
+          }
+
+          check_pages_200() {
+            # Requires HTTP 200 on the four key pages (catches partial
+            # deploys where the build API looks fine but a page 404s).
+            ok=0
+            for path in "/" "/about/" "/writing/" "/cv/"; do
+              code="$(curl -s -o /dev/null -w '%{http_code}' "${SITE}${path}")"
+              echo "GET ${SITE}${path} -> $code"
+              if [ "$code" != "200" ]; then
+                echo "::warning::${SITE}${path} returned $code, expected 200"
+                ok=1
+              fi
+            done
+            return $ok
+          }
+
+          if poll_builds && check_pages_200; then
+            echo "Deploy verified."
+            exit 0
+          fi
+
+          echo "::warning::Deploy did not verify within the polling window. Attempting self-heal."
+          echo "needs-heal=1" >> "$GITHUB_OUTPUT"
+
+      - name: Self-heal — request a fresh Pages build and re-poll
+        if: steps.check.outputs.needs-heal == '1'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -u
+          target_sha="${GITHUB_SHA}"
+
+          http_code="$(curl -s -o /tmp/build_resp.json -w '%{http_code}' \
+            -X POST \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${OWNER}/${REPO}/pages/builds")"
+          echo "POST /pages/builds -> $http_code"
+          cat /tmp/build_resp.json || true
+
+          if [ "$http_code" = "403" ] || [ "$http_code" = "404" ]; then
+            echo "::error::Self-heal request to POST /repos/${OWNER}/${REPO}/pages/builds failed ($http_code) — the default GITHUB_TOKEN cannot trigger a Pages rebuild. Go to the Actions tab, open the failed 'pages build and deployment' run (or this run), and click 'Re-run failed jobs' to redeploy manually."
+            exit 1
+          fi
+          if [ "$http_code" -ge 400 ]; then
+            echo "::error::Self-heal request to POST /repos/${OWNER}/${REPO}/pages/builds returned unexpected status $http_code. Redeploy manually from the Actions tab."
+            exit 1
+          fi
+
+          echo "Fresh Pages build requested; polling again (~8 min)."
+          for i in $(seq 1 16); do
+            resp="$(curl -fsS \
+              -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${OWNER}/${REPO}/pages/builds/latest" || true)"
+            if [ -n "$resp" ]; then
+              commit="$(echo "$resp" | jq -r '.commit // empty')"
+              status="$(echo "$resp" | jq -r '.status // empty')"
+              echo "re-poll $i/16: commit=$commit status=$status"
+              if [ "$commit" = "$target_sha" ] && [ "$status" = "built" ]; then
+                echo "Deploy verified after self-heal."
+                exit 0
+              fi
+            else
+              echo "re-poll $i/16: pages/builds/latest request failed"
+            fi
+            sleep 30
+          done
+
+          echo "::error::Deploy still not verified after requesting a fresh Pages build. The site may be serving stale content — check the Pages build history and re-run manually if needed."
+          exit 1
