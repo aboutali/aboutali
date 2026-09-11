@@ -57,6 +57,19 @@ first, it re-syncs and retries with backoff. Commits are authored by
 > skipped; to include them, add a PAT secret with `repo` scope and read it
 > in the workflow.
 
+### Deploy verification
+
+`.github/workflows/verify-deploy.yml` guards against a stalled or partial
+Pages deploy (this happened once: a queued build timed out and the site
+served stale content for 10 minutes with no signal). It runs on every push
+to `main`, daily, and on demand: it polls the Pages Builds API until the
+latest build matches the pushed commit and is `built`, then checks that
+`/`, `/about/`, `/writing/`, and `/cv/` all return 200. If that doesn't
+happen in time, it requests a fresh Pages build and re-polls once before
+failing. **A red run means the live site may be stale or broken** — check
+the Actions log; if it couldn't self-heal (403/404 on the rebuild request),
+re-run the deploy manually from the Actions tab.
+
 ## Adding a new project
 
 Two edits, then commit to `main`:
