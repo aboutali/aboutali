@@ -19,8 +19,9 @@ Fonts are Archivo / Newsreader / JetBrains Mono from Google Fonts.
   a typographic fallback cover, facts row, short prose). Linked from each
   project's `.name` on the homepage; cycle through them with "Next project →".
 - `writing/index.html` — post index; each post is a directory
-  (e.g. `writing/hello-world/`). To add a post, copy an existing one,
-  edit it, and add a `<li>` to the index (newest first).
+  (e.g. `writing/hello-world/`). To add a post, copy an existing one, edit
+  it, add a `<li>` to the index (newest first), add an `<entry>` to
+  `writing/feed.xml`, and add the post URL to `sitemap.xml`.
 - `cv/index.html` — CV with a print stylesheet (prints to a clean A4 resume).
 - `404.html` — custom not-found page (uses absolute asset paths since Pages
   serves it from arbitrary URLs).

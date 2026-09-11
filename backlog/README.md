@@ -59,7 +59,7 @@ deploy self-verification, no email address published.
 | # | Item | Plan | Status |
 |---|------|------|--------|
 | 05 | Project case-study pages with real screenshots (×6) | [plans/05-project-case-studies.md](plans/05-project-case-studies.md) | ✅ 2026-09-11 · PR #6 |
-| 03 | RSS feed for Writing | [plans/03-rss-feed.md](plans/03-rss-feed.md) | ☐ ready |
+| 03 | RSS feed for Writing | [plans/03-rss-feed.md](plans/03-rss-feed.md) | ✅ 2026-09-11 · PR #6 |
 | 07 | CI quality gates on PRs (links, markers, HTML sanity) | [plans/07-ci-quality-gates.md](plans/07-ci-quality-gates.md) | ☐ ready |
 | 08 | Per-page OG images | [plans/08-og-images-per-page.md](plans/08-og-images-per-page.md) | ☐ ready |
 
